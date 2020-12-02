@@ -1,0 +1,52 @@
+dialect  "mvel"
+
+global nl.codelines.example.drools.domain.Quote quote;
+
+import nl.codelines.example.drools.domain.Quote;
+import nl.codelines.example.drools.domain.QuoteRequest
+import java.math.BigDecimal;
+
+rule "Base price per day"
+    then
+        quote.setCostPerDay(2000);
+end
+
+rule "Expensive trainings"
+    when
+        request:QuoteRequest(subject == "spring" || subject == "kafka");
+    then
+        quote.setCostPerDay(quote.getCostPerDay() + 250);
+end
+
+rule "Large groups"
+    when
+        request:QuoteRequest(trainees > 8)
+    then
+        quote.setCostPerDay(quote.getCostPerDay() + 250);
+end
+
+rule "Half days"
+    when
+        request:QuoteRequest(hoursPerDay <= 4)
+    then
+        quote.setCostPerDay((int)(quote.getCostPerDay() / 2));
+end
+
+rule "Set name"
+  when
+      request:QuoteRequest()
+  then
+      quote.setName(String.format("Training on '%s' for %s trainees", request.subject, request.trainees));
+end
+
+rule "Total price"
+    when
+        request:QuoteRequest()
+    then
+        quote.setPrice(new BigDecimal(quote.getCostPerDay() * request.getDays()));
+end
+
+rule "VAT"
+    then
+        quote.setVat(quote.getPrice().multiply(new BigDecimal("0.21")));
+end

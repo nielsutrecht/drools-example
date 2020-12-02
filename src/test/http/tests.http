@@ -1,0 +1,22 @@
+
+POST http://localhost:8080/quote
+Content-Type: application/json
+
+{
+  "subject": "spring",
+  "days": 4,
+  "hoursPerDay": 8,
+  "trainees": 5
+}
+###
+
+POST http://localhost:8080/quote
+Content-Type: application/json
+
+{
+  "subject": "java",
+  "days": 2,
+  "hoursPerDay": 4,
+  "trainees": 16
+}
+###
